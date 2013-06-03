@@ -15,7 +15,7 @@ TweetStream.configure do |config|
     config.auth_method = :oauth
 end
 
-    DESIRED = %w{created_at text geo coordinates id id_str}
+    DESIRED = %w{created_at text coordinates user entities id id_str}
 
 puts "Beginning stream..."
      begin
@@ -24,7 +24,7 @@ puts "Beginning stream..."
 	        exit(1)
 	   end.locations('-125.00','25.00','-70.00','50.00',nil) do |status, client|
 		  data = status.attrs.select{|k,v| !v.nil? && DESIRED.include?(k.to_s)}
-		  tweets.insert(data.to_json)
+		  tweets.insert(data)
 		puts data.to_s
 	end
 	rescue Interrupt
