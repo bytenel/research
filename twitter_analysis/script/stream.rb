@@ -19,7 +19,7 @@ end
 
 puts "Beginning stream..."
      begin
-       TweetStream::Client.new.on_error do |message|
+       TweetStream::Daemon.new('tweetstream').on_error do |message|
 		puts "An error occurred...#{message}"
 	        exit(1)
 	   end.locations('-125.00','25.00','-70.00','50.00',nil) do |status, client|
