@@ -21,11 +21,12 @@ puts "Beginning stream..."
      begin
        TweetStream::Daemon.new('tweetstream').on_error do |message|
 		puts "An error occurred...#{message}"
-	        exit(1)
-	   end.locations('-125.00','25.00','-70.00','50.00',nil) do |status, client|
+	        exit(1) 
+		#from alaska to florida 
+	   end.locations('-170.00','12.00','-70.00','55.00',nil) do |status, client|
 		  data = status.attrs.select{|k,v| !v.nil? && DESIRED.include?(k.to_s)}
 		  tweets.insert(data)
-		puts data.to_s
+		  puts data.to_s
 	end
 	rescue Interrupt
 			puts "Closing connection..."
