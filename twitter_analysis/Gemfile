@@ -4,6 +4,7 @@ gem 'rails', '3.2.13'
 
 gem "pg", ">= 0.15.0"
 gem "mongo"
+gem "mongoid"
 
 gem "bson_ext"
 gem "libv8", ">= 3.11.8"
