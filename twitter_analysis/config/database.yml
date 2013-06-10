@@ -46,5 +46,5 @@ production:
   encoding: unicode
   database: test-postgres_production
   pool: 5
-  username: test_postgres
+  username: test-postgres
   password: password
