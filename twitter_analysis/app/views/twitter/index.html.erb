@@ -1,2 +1,8 @@
 <div id="twitter_data_wrapper">
+	<div class="tweet_wrapper" data-bind="foreach: tweet">
+		<div class="tweet_text" data-bind="text: tweetText">
+
+		</div>
+		<%= image_tag('twitter-icon.svg', :class=>"tweet_img") %>
+	</div>
 </div>
