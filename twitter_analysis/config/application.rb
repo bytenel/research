@@ -61,6 +61,9 @@ module UndergradResearch
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
+    #Debugging assets, remember to change for production!
+    config.assets.debug = true
+     
     config.app_generators.stylesheet_engine :less
   end
 end

@@ -1,7 +1,8 @@
 class TwitterController < ActionController::Base
+	layout 'application'
 	def index
 		#respond to json requests with tweets
-		@tweets = Tweet.all.to_a.pop
+		@tweets = Tweet.all.to_a[1]
 		@tweets
 
 		# use this for responding to different request formats TODO
