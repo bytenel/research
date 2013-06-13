@@ -16,8 +16,8 @@ gem "rolify", ">= 3.2.0"
 # in production environments by default.
 group :assets do
   gem 'jquery-rails'
- # gem "knockout-rails"
- # gem "coffee-rails"
+  gem "knockout-rails"
+  gem "coffee-rails"
   gem "typescript-rails"
   gem "qunit-rails"
   gem "tweetstream"

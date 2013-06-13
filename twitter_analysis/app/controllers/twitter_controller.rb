@@ -1,6 +1,8 @@
 class TwitterController < ActionController::Base
 	layout 'application'
+
 	def index
+		count = params[:count]
 		#respond to json requests with tweets
 		@tweets = Tweet.all.to_a[1]
 		@tweets
@@ -16,6 +18,10 @@ class TwitterController < ActionController::Base
 	    #  end  
 	    #end 
 
+	    respond_to do |format|
+			format.json { render :json => @tweets.to_json }
+			format.html { render }
+	    end
 	    #USE THIS TO RETURN JSON tweets TO AJAX REQUESTS
 	    #respond_with
 	end

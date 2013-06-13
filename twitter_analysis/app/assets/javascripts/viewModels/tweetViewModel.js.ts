@@ -37,7 +37,7 @@ module twitterResearch {
 			//from the server
 			pushTweet(tweet)
 			{
-				var obj = JSON.parse(tweet);
+				var obj = tweet;
 				var _tweet = new Tweet(obj.text,obj.created_at, 
 								   obj.coordinates, obj.user, obj.entities, 
 								   obj.id_str, obj.id);
@@ -50,11 +50,8 @@ var viewModel = new twitterResearch.TweetViewModel();
 
 //document.onReady callback function
 $(function() {
-	  alert('Get ajax call was done.');
-		$.get('twitter/2', function(data) {
+		$.getJSON('twitter', {'count': '2'}, function(data) {
 			  viewModel.pushTweet(data);
-			  alert(data);
-			  alert('Get ajax call was done.');
 		});
 
 		ko.applyBindings(viewModel);
