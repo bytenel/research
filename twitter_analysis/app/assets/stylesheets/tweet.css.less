@@ -1,16 +1,16 @@
 @charset 'UTF-8';
 /* styling for the tweets */
 
-/* Gives the fade in text box when you touch the image */
-.tweet_text { width: 100px; height: 100px; line-height: 0px; color: transparent; font-size: 10px; font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 150; text-transform: uppercase; -webkit-transition: all 0.5s ease; -moz-transition: all 0.5s ease; -o-transition: all 0.5s ease; } 
+#tweet_data_wrapper{
+	max-width:50px; height:50px;	
+}
 
-.tweet_text:hover { line-height: 10px; color: #575858; background-color:rgba(0, 204, 255, 0.08); border:1px; border-style:solid;} 
+/* Gives the fade in text box when you touch the image */
+.tweet_text { display:none;width: 100px; height: 100px; line-height: 10px; color: #575858; font-size: 10px; font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 150; text-transform: uppercase; background-color:rgba(0, 204, 255, 0.08); border:1px; border-style:solid;} 
 
 /* Fade in and glow effect on image */
 .tweet_img { width: 50px; margin: 0 auto; min-height: 50px; }
 
-.tweet_img { margin: 25px; opacity: 0.8; border: 10px solid #eee; /*Transition*/ -webkit-transition: all 0.5s ease; -moz-transition: all 0.5s ease; -o-transition: all 0.5s ease; /*Reflection*/ -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(.7, transparent), to(rgba(0,0,0,0.1))); } 
-
-.tweet_img:hover { opacity: 1; /*Reflection*/ -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(.7, transparent), to(rgba(0,0,0,0.4))); /*Glow*/ -webkit-box-shadow: 0px 0px 20px rgba(255,255,255,0.8); -moz-box-shadow: 0px 0px 20px rgba(255,255,255,0.8); box-shadow: 0px 0px 20px rgba(255,255,255,0.8); }
+.tweet_img { margin: 25px; opacity: 0.8; border: 10px solid #eee; /*Transition*/ -webkit-transition: all 0.5s ease; -moz-transition: all 0.5s ease; -o-transition: all 0.5s ease; /*Reflection*/ -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(.7, transparent), to(rgba(0,0,0,0.1))); }
 
 .hidden{ display:none; }
