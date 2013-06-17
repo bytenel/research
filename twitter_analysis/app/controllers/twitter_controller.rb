@@ -1,6 +1,7 @@
 class TwitterController < ActionController::Base
 	layout 'application'
 
+	#need to define index to be the baseline method and then define another to change the number of tweets displayed
 	def index
 		count = params[:count]
 		#respond to json requests with tweets
