@@ -1,0 +1,70 @@
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0; }
+      #map-canvas { height: 100% }
+	  #control-panel { height: 100px; padding: 20px; background: url('fade.png') repeat-x #000; color:#fff; font-size: 14px;  }
+	  input { padding: 8px; margin: 5px 10px; font-size: 14px; }
+	  label { font-size: 14px; }
+    </style>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAU0mPug-Q9GT3rqeg7gRN0dKkjNJCyieM&sensor=true&libraries=visualization">
+    </script>
+    <script type="text/javascript">
+      function initialize() {
+		var fusionTableId = '1Lxp4IOOyIpiyCD3LCwc4iS3HHeyQHMFZKGxEI7w';
+		var sanFrancisco = new google.maps.LatLng(37.774546, -122.433523);
+		
+		//Initialize the actual map
+		map = new google.maps.Map(document.getElementById('map-canvas'), {
+		  center: sanFrancisco,
+		  zoom: 4,
+		  mapTypeId: google.maps.MapTypeId.SATELLITE
+		});
+		
+		//Add overlay
+		viewMap('1Lxp4IOOyIpiyCD3LCwc4iS3HHeyQHMFZKGxEI7w', 'Location');
+		
+		// Sample: 1xWyeuAhIFK_aED1ikkQEGmR8mINSCJO9Vq-BPQ
+		// Ours: 1Lxp4IOOyIpiyCD3LCwc4iS3HHeyQHMFZKGxEI7w
+      }
+	  
+	  function viewMap(ID, columnName) {
+		if (typeof standard != 'undefined' && standard)
+			standard.setMap(null);
+		if (typeof heatmap != 'undefined' && heatmap)
+			heatmap.setMap(null);
+		standard = new google.maps.FusionTablesLayer({
+			query: { select: columnName, from: ID}
+		});
+		heatmap = new google.maps.FusionTablesLayer({
+			query: { select: columnName, from: ID}, 
+			heatmap: { enabled: true }	
+		});
+		if (document.getElementById('heatmap-toggle').checked == false)
+			standard.setMap(map); //Show the dotted map by default.
+		else
+			heatmap.setMap(map); //Show the heatmap by default.
+	  }
+	  
+	  function toggleHeatmap() {
+		if (standard.getMap() == null) {
+			heatmap.setMap(null);
+			standard.setMap(map);
+		} else {
+			standard.setMap(null);
+			heatmap.setMap(map);
+		}
+	  }
+	  
+	  
+	  
+      google.maps.event.addDomListener(window, 'load', initialize);
+	  
+    </script>
+  	<div id="control-panel">
+        <input type="radio" onclick="viewMap('1Lxp4IOOyIpiyCD3LCwc4iS3HHeyQHMFZKGxEI7w','Location');" name="map-data" id="default" checked /><label for="default">Default</label><br />
+        <input type="radio" onclick="viewMap('1xWyeuAhIFK_aED1ikkQEGmR8mINSCJO9Vq-BPQ','Location');" name="map-data" id="sample" /><label for="sample">Sample</label><br />
+        
+    	<input type="checkbox" onclick="toggleHeatmap();" id="heatmap-toggle"/><label for="heatmap-toggle">View heatmap</label><br />
+    </div>
+    <div id="map-canvas"/>
