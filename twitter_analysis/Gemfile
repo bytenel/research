@@ -7,7 +7,6 @@ gem "mongo"
 gem "mongoid"
 
 gem "bson_ext"
-gem "libv8", ">= 3.11.8"
 gem "devise", ">= 2.2.3"
 gem "devise_invitable", ">= 1.1.5"
 gem "cancan", ">= 1.6.9"
@@ -22,9 +21,8 @@ group :assets do
   gem "qunit-rails"
   gem "tweetstream"
   gem 'uglifier', '>= 1.0.3'
-  gem "less-rails", ">= 2.2.6"
+  gem 'sass-rails'
   gem "twitter-bootstrap-rails", ">= 2.2.4"
-  gem "therubyracer", ">= 0.11.3", :platform => :ruby, :require => "v8"
 end
 
 group :development, :test do
