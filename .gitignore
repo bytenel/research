@@ -17,3 +17,5 @@ pickle-email-*.html
 twitter_analysis/config/application.yml
 research.sublime-project
 research.sublime-workspace
+.idea/*
+.idea/

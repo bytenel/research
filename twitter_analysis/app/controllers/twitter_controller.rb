@@ -25,5 +25,8 @@ class TwitterController < ActionController::Base
 	    end
 	    #USE THIS TO RETURN JSON tweets TO AJAX REQUESTS
 	    #respond_with
-	end
+  end
+  def map
+
+  end
 end

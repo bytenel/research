@@ -11,3 +11,8 @@
  *= require_self
  *= require_tree .
  */
+
+#content_wrapper {
+    height: 100%;
+    width: 100%;
+}
