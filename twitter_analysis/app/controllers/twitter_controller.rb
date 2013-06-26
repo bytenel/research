@@ -5,7 +5,8 @@ class TwitterController < ActionController::Base
 	def index
 		count = params[:count]
 		#respond to json requests with tweets
-		@tweets = Tweet.all.to_a[1]
+		#@tweets = Tweet.all.to_a[1]
+    @tweets = Tweet.last
 		@tweets
 
 		# use this for responding to different request formats TODO
