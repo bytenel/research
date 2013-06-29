@@ -9,6 +9,7 @@ twitter_analysis/log/*
 twitter_analysis/tmp/*
 twitter_analysis/db/*.sqlite3
 twitter_analysis/public/system/*
+twitter_analysis/public/assets/*
 twitter_analysis/coverage/
 twitter_analysis/spec/tmp/*
 **.orig
