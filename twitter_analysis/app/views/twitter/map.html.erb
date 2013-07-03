@@ -2,9 +2,9 @@
       html { height: 100% }
       body { height: 100%; margin: 0; padding: 0; }
       #map-canvas { height: 100% }
-	  #control-panel { height: 100px; padding: 20px; background: url('fade.png') repeat-x #000; color:#fff; font-size: 14px;  }
+	  #control-panel { height: 100px; padding: 20px; background: url('images/fade.png') repeat-x #000; color:#fff; font-size: 18px;  }
 	  input { padding: 8px; margin: 5px 10px; font-size: 14px; }
-	  label { font-size: 14px; }
+	  label { font-size: 18px; }
     </style>
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAU0mPug-Q9GT3rqeg7gRN0dKkjNJCyieM&sensor=true&libraries=visualization">
@@ -62,7 +62,7 @@
 	  
     </script>
   	<div id="control-panel">
-        <input type="radio" onclick="viewMap('1Lxp4IOOyIpiyCD3LCwc4iS3HHeyQHMFZKGxEI7w','Location');" name="map-data" id="default" checked /><label for="default">Default</label><br />
+        <input type="radio" onclick="viewMap('1Lxp4IOOyIpiyCD3LCwc4iS3HHeyQHMFZKGxEI7w','Location');" name="map-data" id="default" checked /><label for="default">Tweets</label><br />
         <input type="radio" onclick="viewMap('1xWyeuAhIFK_aED1ikkQEGmR8mINSCJO9Vq-BPQ','Location');" name="map-data" id="sample" /><label for="sample">Sample</label><br />
         
     	<input type="checkbox" onclick="toggleHeatmap();" id="heatmap-toggle"/><label for="heatmap-toggle">View heatmap</label><br />
