@@ -1,0 +1,37 @@
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<h3 class="text-info text-left">
+				Now searching for {Search_Text}	
+			</h3>
+			<%= form_tag("/search", method: "get", :class => "form-search form-inline") do %>
+			  <%= label_tag(:q, "Search for:") %>
+			  <%= text_field_tag(:q, nil, class:"input-medium search-query") %>
+			  <%= submit_tag("Search", :class=>"btn") %>
+			<% end %>
+
+			<div class="media" data-bind"foreach: tweetsArray">
+				<%= image_tag('twitter-icon.svg', :class=>"tweet_img") %> 
+				<div class="media-body" >
+					<h4 class="media-heading" data-bind"text:tweet.text"></h4>
+					Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.
+				</div>
+			</div>
+	
+			<div class="pagination pagination-centered">
+				<ul>
+					<li>
+						<a href="#">Prev</a>
+					</li>
+					<li>
+						<a href="#">1</a>
+					</li>
+					<li>
+						<a href="#">Next</a>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+</div>

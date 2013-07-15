@@ -50,7 +50,7 @@ var viewModel = new twitterResearch.TweetViewModel();
 
 //document.onReady callback function
 $(function() {
-		$.getJSON('twitter', {'count': '2'}, function(data) {
+		$.getJSON('twitter', {}, function(data) {
 			  viewModel.pushTweet(data);
 		});
 
