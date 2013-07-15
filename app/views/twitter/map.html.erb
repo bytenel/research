@@ -2,9 +2,9 @@
       html { height: 100% }
       body { height: 100%; margin: 0; padding: 0; }
       #map-canvas { height: 100% }
-	  #control-panel { height: 100px; padding: 20px; background: url('fade.png') repeat-x #000; color:#fff; font-size: 14px;  }
+	  #control-panel { height: 100px; padding: 30px 25px 45px 25px; background: url('fade.png') repeat-x #000; color:#fff; font-size: 14px;  }
 	  input { padding: 8px; margin: 5px 10px; font-size: 14px; }
-	  label { font-size: 14px; }
+	  label { font-size: 18px; }
     </style>
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAU0mPug-Q9GT3rqeg7gRN0dKkjNJCyieM&sensor=true&libraries=visualization">
@@ -28,22 +28,28 @@
 		// Ours: 1Lxp4IOOyIpiyCD3LCwc4iS3HHeyQHMFZKGxEI7w
       }
 	  
-	  function viewMap(ID, columnName) {
+	  function viewMap(ID, columnName, query) {
 		if (typeof standard != 'undefined' && standard)
 			standard.setMap(null);
 		if (typeof heatmap != 'undefined' && heatmap)
 			heatmap.setMap(null);
-		standard = new google.maps.FusionTablesLayer({
-			query: { select: columnName, from: ID}
-		});
-		heatmap = new google.maps.FusionTablesLayer({
-			query: { select: columnName, from: ID}, 
-			heatmap: { enabled: true }	
-		});
-		if (document.getElementById('heatmap-toggle').checked == false)
+         if (query)
+            sql = query;
+          else
+            sql = "";
+		if (document.getElementById('heatmap-toggle').checked == false)  {
+            standard = new google.maps.FusionTablesLayer({
+                query: { select: columnName, from: ID, where: sql}
+            });
 			standard.setMap(map); //Show the dotted map by default.
-		else
+        }
+		else {
+            heatmap = new google.maps.FusionTablesLayer({
+                query: { select: columnName, from: ID, where: sql},
+                heatmap: { enabled: true }
+            });
 			heatmap.setMap(map); //Show the heatmap by default.
+        }
 	  }
 	  
 	  function toggleHeatmap() {
@@ -56,15 +62,30 @@
 		}
 	  }
 	  
+	function searchMap(query) {
+        UIquery = document.getElementById('search-text').value;
+        var tempUIquery = UIquery;
+        if (query != UIquery) {
+            document.getElementById('search-button').setAttribute("disabled","disabled");
+            document.getElementById('search-button').value = 'Searching...';
+            setTimeout(function(){searchMap(tempUIquery);},200);
+        }
+        else {
+            viewMap('1Lxp4IOOyIpiyCD3LCwc4iS3HHeyQHMFZKGxEI7w','Location', "Text CONTAINS '" + query + "'");
+            document.getElementById('search-button').removeAttribute("disabled");
+            document.getElementById('search-button').value = 'Search';
+        }
+	}
 	  
 	  
       google.maps.event.addDomListener(window, 'load', initialize);
 	  
     </script>
   	<div id="control-panel">
-        <input type="radio" onclick="viewMap('1Lxp4IOOyIpiyCD3LCwc4iS3HHeyQHMFZKGxEI7w','Location');" name="map-data" id="default" checked /><label for="default">Default</label><br />
-        <input type="radio" onclick="viewMap('1xWyeuAhIFK_aED1ikkQEGmR8mINSCJO9Vq-BPQ','Location');" name="map-data" id="sample" /><label for="sample">Sample</label><br />
+        <input type="radio" onclick="viewMap('1Lxp4IOOyIpiyCD3LCwc4iS3HHeyQHMFZKGxEI7w','Location');" name="map-data" id="default" checked /><label for="default">Tweets</label><br />
+        <input type="radio" onclick="viewMap('1xWyeuAhIFK_aED1ikkQEGmR8mINSCJO9Vq-BPQ','Location');" name="map-data" id="sample" /><label for="sample">Earthquakes (Google)</label><br />
         
-    	<input type="checkbox" onclick="toggleHeatmap();" id="heatmap-toggle"/><label for="heatmap-toggle">View heatmap</label><br />
+    	<input type="checkbox" onclick="toggleHeatmap();" id="heatmap-toggle"/><label for="heatmap-toggle">View Heatmap</label><br />
+	    <input type="text" id="search-text" onkeyup="searchMap(null)" /><input type="button" id="search-button" value="Search" onclick="searchMap(null);"/>
     </div>
     <div id="map-canvas"/>

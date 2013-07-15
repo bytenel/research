@@ -1,54 +1,114 @@
 #!/usr/bin/env ruby
-require 'mongo'
-
-=begin
-
-  -Be able to retrieve data from mongo in CSV format. Start with 100 rows at a time.
-  -Line up this data with the code below to send it off to Fusion Tables
-  -Daemonize the script such that it runs once a day at 3am.
-
-=end
-
-
-# This is the full code for importing CSV data into Fusion Tables via the API.
-=begin
-
-#!/usr/bin/env ruby
-
+require 'rubygems' # Helps find gems like mongo that aren't in the load path for some reason.
 require 'uri'
 require 'net/http'
 require 'net/https'
+require 'mongo' # Allows us to connect to mongo
+require 'logger' # Allows file logging
+require 'json'
 
-# Table ID: 1Lxp4IOOyIpiyCD3LCwc4iS3HHeyQHMFZKGxEI7w
+include Mongo
 
-# If we need to pull the data from a file:
-data=''
+=begin
 
-File.open("sample.txt") do |file|
-	data = file.read
+Tasks:
+  -Write full OAuth code for automatic Google API authorization (currently needs to be done manually)
+  -Write code to handle errors that may occur with various calls to Google.
+  -Evaluate the security of having the client secret in this code
+  -Daemonize the script such that it runs once a day at 3am.
+
+=end
+if ARGV.index('--help') != nil
+  puts 'Use --rows <number> to specify how many rows to push.'
+  exit
 end
+row_index = ARGV.index('--rows')
+if row_index != nil
+  rows = ARGV[row_index + 1]
+  if rows == nil
+    puts 'You did not submit a row quantity.'
+    exit
+  end
+  rows = rows.to_i
+  if rows == 0 || rows < 0
+    puts 'Invalid row quantity. Please provide an integer greater than 1'
+    exit
+  end
+else
+  rows = 100
+end
+
+
+@client = MongoClient.new('localhost', 27017)
+@db     = @client['undergrad_research']
+@coll   = @db['tweets']
+num_rows = rows
+puts "Preparing to retrieve the first " + num_rows.to_s + " rows from database.\n\n"
+@items = @coll.find({text: { '$exists' => true }, coordinates: { '$exists' => true }, created_at: { '$exists' => true } }, {:fields => ["text", "coordinates", "created_at"]})
+count = 1
+header = "Text,Location,Time"
+data = header + "\n"
+
+# Iterate through rows of the DB
+while @items.has_next?
+  if count >= num_rows
+    break
+  end
+  if count % (num_rows/10) == 0
+    puts "Retrieving and formatting rows " + count.to_s + "-" + (count+(num_rows/10)).to_s + "...\n"
+  end
+
+  @item =  @items.next()
+  correct_coordinates = [@item['coordinates']['coordinates'][1], @item['coordinates']['coordinates'][0]]
+  text = @item['text'].to_s
+  row = "\"" + text.gsub(/"/,'""') + "\",\"" + correct_coordinates.to_s.gsub(/\[|\]/, '') + "\",\"" + @item['created_at'].to_s + "\""
+  data += row + "\n"
+
+  count += 1
+end
+
+# This code will automatically refresh our access token to make sure we can still access the API
+
+google_oauth = URI.parse('https://accounts.google.com/o/oauth2/token')
+client_id = '524332453800-b31p35fpq4chitlbfp4aol3cfda4bv7e.apps.googleusercontent.com'
+client_secret = '0Os0EqKH36aHQuAdCDxvPmML'
+refresh_token = '1/HMfIVUwemOGr1ktPNCqgAK8LW4WVVoMNixIDUiy55Ow' #Needs to be obtained first.
+
+# Create the HTTP object
+https = Net::HTTP.new(google_oauth.host, google_oauth.port)
+https.use_ssl = true
+https.verify_mode = OpenSSL::SSL::VERIFY_NONE
+https.set_debug_output(Logger.new("http.log"))
+
+puts 'Asking Google to refresh our access token...'
+response = https.post(google_oauth.path, 'client_id=' + client_id + '&client_secret=' + client_secret + '&refresh_token=' + refresh_token + '&grant_type=refresh_token')
+
+puts 'Parsing response from Google for access token...'
+# Get the access token from the response.
+access_token = JSON.parse(response.body)['access_token'];
+
+
+puts 'Preparing data to be sent to Fusion Tables...'
 
 uri = URI.parse('https://www.googleapis.com/upload/fusiontables/v1/tables/1Lxp4IOOyIpiyCD3LCwc4iS3HHeyQHMFZKGxEI7w/import')
 
-headers = {"Authorization" => 'Bearer ya29.AHES6ZTbvlsLiQCvAQ4gXjJ7iDxr0PdyP1yYA62bt0SLUGc', "Content-Type" => 'application/octet-stream'}
+headers = {"Authorization" => 'Bearer ' + access_token, "Content-Type" => 'application/octet-stream'}
 
 # Create the HTTP object
 https = Net::HTTP.new(uri.host, uri.port)
 https.use_ssl = true
 https.verify_mode = OpenSSL::SSL::VERIFY_NONE
-# USE FOR DEBUGGING: https.set_debug_output $stderr
+https.set_debug_output(Logger.new("http.log"))
+puts 'Sending data...'
 response = https.post(uri.path, data, headers)
 
-
 #Debugging output code:
-
+puts "Here is the response from Google:\n"
 puts response.body
+
 case response
 when Net::HTTPSuccess, Net::HTTPRedirection
-	puts "SUCCESS"
+	puts "Data post was successful."
 else
-	puts "FAILURE"
+	puts "Data post failed."
 end
-
-
-==================================================end
