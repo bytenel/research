@@ -27,33 +27,29 @@ module twitterResearch {
 
 	export class TweetViewModel{
 	
-		    tweetsArray: any; 
+		    tweetsArray = ko.observableArray([]); 
+		    tweet = ko.observableArray([]);
 			constructor()
 			{
-				this.tweetsArray = ko.observableArray();
 			}
 
 			//tweet is going to be the JSON tweet we return 
 			//from the server
 			pushTweet(tweet)
 			{
-				var obj = tweet;
-				var _tweet = new Tweet(obj.text,obj.created_at, 
-								   obj.coordinates, obj.user, obj.entities, 
-								   obj.id_str, obj.id);
+				var _tweet = {
+					text: tweet.text,
+					created_at: tweet.created_at,
+					coordinates: tweet.coordinates,
+					user: tweet.user,
+					entities: tweet.entities,
+					id_str: tweet.id_str,
+					id: tweet.id
+				};		
 				this.tweetsArray.push(_tweet);
+				this.tweetsArray.valueHasMutated();
 			}
 	}
 }
 
-var viewModel = new twitterResearch.TweetViewModel();
-
-//document.onReady callback function
-$(function() {
-		$.getJSON('twitter', {}, function(data) {
-			  viewModel.pushTweet(data);
-		});
-
-		ko.applyBindings(viewModel);
-});
 

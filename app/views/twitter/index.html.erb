@@ -15,4 +15,16 @@
             $(".tweet_text").fadeOut(300);
         }
     );
+
+var viewModel = new twitterResearch.TweetViewModel();
+
+//document.onReady callback function
+$(function() {
+        $.getJSON('twitter', {}, function(data) {
+              viewModel.pushTweet(data);
+        });
+
+        ko.applyBindings(viewModel);
+});
+
 </script>

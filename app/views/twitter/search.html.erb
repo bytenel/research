@@ -10,11 +10,11 @@
 			  <%= submit_tag("Search", :class=>"btn") %>
 			<% end %>
 
-			<div class="media" data-bind"foreach: tweetsArray">
-				<%= image_tag('twitter-icon.svg', :class=>"tweet_img") %> 
-				<div class="media-body" >
-					<h4 class="media-heading" data-bind"text:tweet.text"></h4>
-					Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.
+			<div class="media" data-bind="foreach: tweetsArray">
+				<%= image_tag('twitter-icon.svg', :class=>"tweet_img", :style=>"display:inline;") %> 
+				<div class="media-body" style="display:inline;">
+					<h4 class="media-heading" data-bind="text: user.screen_name" style="display:inline;"></h4>
+					<span data-bind="text:text" style="display:inline;"></span>
 				</div>
 			</div>
 	
@@ -35,3 +35,16 @@
 		</div>
 	</div>
 </div>
+
+<script>
+var viewModel = new twitterResearch.TweetViewModel();
+ko.applyBindings(viewModel);
+
+//document.onReady callback function
+$(function() {
+		$.getJSON('twitter', {}, function(data) {
+			  viewModel.pushTweet(data);
+			  console.log(data.user);
+		});
+});
+</script>
