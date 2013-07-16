@@ -12,8 +12,8 @@ module twitterResearch {
 			id: number;
 			id_str: string;
 
-			constructor(_text: string, _created_at: string, _coordinates: string, _user: string,
-					    _entities: string, _id_str: string, _id: number){
+			constructor(_text: string, _created_at: string, _coordinates: any, _user: any,
+					    _entities: any, _id_str: string, _id: number){
 
 				this.text = _text;
 				this.created_at = _created_at;
@@ -26,26 +26,19 @@ module twitterResearch {
 	}
 
 	export class TweetViewModel{
-	
-		    tweetsArray = ko.observableArray([]); 
-		    tweet = ko.observableArray([]);
+			
+			tweetsArray: any;	
 			constructor()
 			{
+				this.tweetsArray = ko.observableArray([]);
 			}
 
 			//tweet is going to be the JSON tweet we return 
 			//from the server
 			pushTweet(tweet)
 			{
-				var _tweet = {
-					text: tweet.text,
-					created_at: tweet.created_at,
-					coordinates: tweet.coordinates,
-					user: tweet.user,
-					entities: tweet.entities,
-					id_str: tweet.id_str,
-					id: tweet.id
-				};		
+				var _tweet = new Tweet(tweet.text, tweet.created_at, tweet.coordinates,
+									   tweet.user, tweet.entities, tweet.id_str, tweet.id);
 				this.tweetsArray.push(_tweet);
 				this.tweetsArray.valueHasMutated();
 			}

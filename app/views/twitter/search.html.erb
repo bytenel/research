@@ -1,9 +1,13 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
-			<h3 class="text-info text-left">
-				Now searching for {Search_Text}	
-			</h3>
+			<%= 
+			   if params[:q] 
+				render 'active_search.html.erb'
+			   else
+			   	render 'passive_search.html.erb'
+			   end
+			%>	
 			<%= form_tag("/search", method: "get", :class => "form-search form-inline") do %>
 			  <%= label_tag(:q, "Search for:") %>
 			  <%= text_field_tag(:q, nil, class:"input-medium search-query") %>
@@ -14,7 +18,8 @@
 				<%= image_tag('twitter-icon.svg', :class=>"tweet_img", :style=>"display:inline;") %> 
 				<div class="media-body" style="display:inline;">
 					<h4 class="media-heading" data-bind="text: user.screen_name" style="display:inline;"></h4>
-					<span data-bind="text:text" style="display:inline;"></span>
+					<span data-bind="text:text" style="display:inline;"></span> <br/>
+					<span data-bind="text:'Created at '+created_at"></span> <br />
 				</div>
 			</div>
 	
@@ -39,6 +44,8 @@
 <script>
 var viewModel = new twitterResearch.TweetViewModel();
 ko.applyBindings(viewModel);
+
+//TODO: notes to self, use custom binding for pagination along with a computed observable to determine where at in the list you are
 
 //document.onReady callback function
 $(function() {
