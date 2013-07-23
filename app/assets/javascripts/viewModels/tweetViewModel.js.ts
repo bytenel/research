@@ -1,5 +1,5 @@
-
 declare var $: any;
+declare var _:any;
 declare var ko: any;
 
 module twitterResearch {
@@ -26,21 +26,65 @@ module twitterResearch {
 	}
 
 	export class TweetViewModel{
-			
 			tweetsArray: any;	
+			page: any;
+			private per_page: number;
+			total_pages: any;
+			paginated: any;
+			hasPrevious: any;
+			hasNext: any;
 			constructor()
 			{
-				this.tweetsArray = ko.observableArray([]);
+				var self = this;
+				self.tweetsArray = ko.observableArray([]);
+				self.page = ko.observable(0);
+				self.per_page = 5;
+				self.total_pages = ko.computed(function(){
+					 var div = Math.floor(self.tweetsArray().length / self.per_page);
+			         div += self.tweetsArray().length % self.per_page > 0 ? 1 : 0;
+			         return div - 1;
+					});
+
+				self.paginated = ko.computed(function(){
+					var first = self.page() * self.per_page;
+					return self.tweetsArray().slice(first,first + self.per_page);
+				});
+				self.hasPrevious = ko.computed(function(){
+					return self.page() !== 0;
+				});
+				self.hasNext = ko.computed(function(){
+				return self.page() !== self.total_pages();
+				});
 			}
 
 			//tweet is going to be the JSON tweet we return 
 			//from the server
-			pushTweet(tweet)
+			pushTweet(tweetArr)
 			{
-				var _tweet = new Tweet(tweet.text, tweet.created_at, tweet.coordinates,
+				var self = this;
+				_.each(tweetArr, function(tweet){
+					var _tweet = new Tweet(tweet.text, tweet.created_at, tweet.coordinates,
 									   tweet.user, tweet.entities, tweet.id_str, tweet.id);
-				this.tweetsArray.push(_tweet);
-				this.tweetsArray.valueHasMutated();
+				self.tweetsArray.push(_tweet);
+				self.tweetsArray.valueHasMutated();
+				});
+			}
+
+			
+
+			next(){
+				var self = this;
+				if(self.page() < self.total_pages())
+				{
+					self.page(self.page()+1);
+				}
+			}
+			previous()
+			{
+				var self = this;
+				if(self.page() != 0){
+					self.page(self.page() - 1);
+				}
 			}
 	}
 }

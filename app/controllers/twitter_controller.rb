@@ -3,7 +3,7 @@ class TwitterController < ActionController::Base
 
 	def index
 	count = params[:count]
-    @tweets = Tweet.last
+    @tweets = Tweet.all.to_a.last(40)
 
 	 respond_to do |format|
 		format.json { render :json => @tweets.to_json }
