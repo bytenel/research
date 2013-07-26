@@ -19,9 +19,10 @@ Tasks:
 
 =end
 if ARGV.index('--help') != nil
-  puts 'Use --rows <number> to specify how many rows to push.'
+  puts "Use --rows <number> to specify how many rows to push.\nUse --skip <number> to specify how many rows to skip from the end of the results."
   exit
 end
+
 row_index = ARGV.index('--rows')
 if row_index != nil
   rows = ARGV[row_index + 1]
@@ -38,13 +39,30 @@ else
   rows = 100
 end
 
+skip_index = ARGV.index('--skip')
+if skip_index != nil
+  skip = ARGV[skip_index + 1]
+  if skip == nil
+    puts 'You supplied the --skip option but did not submit a skip number.'
+    exit
+  end
+  skip = skip.to_i
+  if skip < 0
+    puts 'You cannot skip negative rows. Please enter a positive number.'
+    exit
+  end
+else
+  skip = 0
+end
+
 
 @client = MongoClient.new('localhost', 27017)
 @db     = @client['undergrad_research']
 @coll   = @db['tweets']
 num_rows = rows
-puts "Preparing to retrieve the first " + num_rows.to_s + " rows from database.\n\n"
-@items = @coll.find({text: { '$exists' => true }, coordinates: { '$exists' => true }, created_at: { '$exists' => true } }, {:fields => ["text", "coordinates", "created_at"]})
+skip_num = skip
+puts "Preparing to retrieve the last " + num_rows.to_s + " rows from database after skipping the very last " + skip_num.to_s + " rows.\n\n"
+@items = @coll.find({text: { '$exists' => true }, coordinates: { '$exists' => true }, created_at: { '$exists' => true } }, {:fields => ["text", "coordinates", "created_at"], :sort => ["_id", Mongo::DESCENDING], :skip => skip_num})
 count = 1
 header = "Text,Location,Time"
 data = header + "\n"
@@ -118,6 +136,9 @@ File.open("tempdata.txt", 'r') do |file|
   puts 'Sending data...'
   response = https.request(req)
 end
+
+# Clean up temporary file afterwards
+File.delete("tempdata.txt")
 
 #Debugging output code:
 puts "Here is the response from Google:\n"
