@@ -67,6 +67,11 @@ while @items.has_next?
   count += 1
 end
 
+File.open("tempdata.txt", 'w') do |file|
+  file.write(data)
+end
+
+
 # This code will automatically refresh our access token to make sure we can still access the API
 
 google_oauth = URI.parse('https://accounts.google.com/o/oauth2/token')
@@ -92,15 +97,27 @@ puts 'Preparing data to be sent to Fusion Tables...'
 
 uri = URI.parse('https://www.googleapis.com/upload/fusiontables/v1/tables/1Lxp4IOOyIpiyCD3LCwc4iS3HHeyQHMFZKGxEI7w/import')
 
-headers = {"Authorization" => 'Bearer ' + access_token, "Content-Type" => 'application/octet-stream'}
+headers = {"Authorization" => 'Bearer ' + access_token, "Content-Type" => 'application/octet-stream', "Content-Length" => data.length, "Transfer-Encoding" => "chunked"}
 
 # Create the HTTP object
 https = Net::HTTP.new(uri.host, uri.port)
 https.use_ssl = true
 https.verify_mode = OpenSSL::SSL::VERIFY_NONE
 https.set_debug_output(Logger.new("http.log"))
-puts 'Sending data...'
-response = https.post(uri.path, data, headers)
+# puts 'Sending data...'
+# response = https.post(uri.path, data, headers)
+
+# New import tactic: stream the data from a file to avoid  memory issues.
+req = Net::HTTP::Post.new(uri.path)
+req['Authorization'] = 'Bearer ' + access_token
+req['Content-Type'] = 'application/octet-stream'
+req['Content-Length'] = data.length
+req['Transfer-Encoding'] = 'chunked'
+File.open("tempdata.txt", 'r') do |file|
+  req.body_stream=file
+  puts 'Sending data...'
+  response = https.request(req)
+end
 
 #Debugging output code:
 puts "Here is the response from Google:\n"
