@@ -72,17 +72,26 @@ while @items.has_next?
   if count >= num_rows
     break
   end
-  if count % (num_rows/10) == 0
+  # Add 9 to num_rows to avoid the division of 10 resulting in 0.
+  if count % ((num_rows+9)/10) == 0
     puts "Retrieving and formatting rows " + count.to_s + "-" + (count+(num_rows/10)).to_s + "...\n"
   end
 
   @item =  @items.next()
-  correct_coordinates = [@item['coordinates']['coordinates'][1], @item['coordinates']['coordinates'][0]]
-  text = @item['text'].to_s
-  row = "\"" + text.gsub(/"/,'""') + "\",\"" + correct_coordinates.to_s.gsub(/\[|\]/, '') + "\",\"" + @item['created_at'].to_s + "\""
-  data += row + "\n"
+  if defined? @item['coordinates'] && \
+  defined? @item['coordinates']['coordinates'] && \
+  defined? @item['coordinates']['coordinates'][1] && \
+  defined? @item['coordinates']['coordinates'][1]
+    correct_coordinates = [@item['coordinates']['coordinates'][1], @item['coordinates']['coordinates'][0]]
+    text = @item['text'].to_s
+    # Format the row to an acceptable CSV format. Don't mess with this!
+    formatted_row = "\"" + text.gsub(/"/,'""') + "\",\"" + correct_coordinates.to_s.gsub(/\[|\]/, '') + "\",\"" + @item['created_at'].to_s + "\""
+    data += formatted_row + "\n"
+    count += 1
+  else
+    # Continue to iterate through the rows but don't increase the count.
+  end
 
-  count += 1
 end
 
 File.open("tempdata.txt", 'w') do |file|
