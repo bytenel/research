@@ -63,37 +63,39 @@ num_rows = rows
 skip_num = skip
 puts "Preparing to retrieve the last " + num_rows.to_s + " rows from database after skipping the very last " + skip_num.to_s + " rows.\n\n"
 @items = @coll.find({text: { '$exists' => true }, coordinates: { '$exists' => true }, created_at: { '$exists' => true } }, {:fields => ["text", "coordinates", "created_at"], :sort => ["_id", Mongo::DESCENDING], :skip => skip_num})
-count = 1
+rows_saved = 1
 header = "Text,Location,Time"
 data = header + "\n"
+rows_iterated = 1
 
 # Iterate through rows of the DB
 while @items.has_next?
-  if count >= num_rows
+  if rows_saved >= num_rows
     break
-  end
-  # Add 9 to num_rows to avoid the division of 10 resulting in 0.
-  if count % ((num_rows+9)/10) == 0
-    puts "Retrieving and formatting rows " + count.to_s + "-" + (count+(num_rows/10)).to_s + "...\n"
   end
 
   @item =  @items.next()
-  if defined? @item['coordinates'] && \
-  defined? @item['coordinates']['coordinates'] && \
-  defined? @item['coordinates']['coordinates'][1] && \
-  defined? @item['coordinates']['coordinates'][1]
+  if @item['coordinates'] && \
+  @item['coordinates']['coordinates'] && \
+  @item['coordinates']['coordinates'][1] && \
+  @item['coordinates']['coordinates'][0]
+    # Add 9 to num_rows to avoid the division of 10 resulting in 0.
+    if rows_saved % ((num_rows+9)/10) == 0
+      puts "Retrieving and formatting rows " + rows_saved.to_s + "-" + (rows_saved+(num_rows/10)).to_s + "...\n"
+    end
     correct_coordinates = [@item['coordinates']['coordinates'][1], @item['coordinates']['coordinates'][0]]
     text = @item['text'].to_s
     # Format the row to an acceptable CSV format. Don't mess with this!
     formatted_row = "\"" + text.gsub(/"/,'""') + "\",\"" + correct_coordinates.to_s.gsub(/\[|\]/, '') + "\",\"" + @item['created_at'].to_s + "\""
     data += formatted_row + "\n"
-    count += 1
+    rows_saved += 1
   else
     # Continue to iterate through the rows but don't increase the count.
   end
-
+  rows_iterated += 1
 end
-
+puts rows_saved.to_s + " retrieved out of " + rows_iterated.to_s + " (" + (rows_iterated-rows_saved).to_s + " rows did not have location data). " + ((rows_saved.to_f/rows_iterated.to_f)*100.0).round(2).to_s + "% frequency."
+puts "Saving rows to file for streaming to Google Fusion Tables..."
 File.open("tempdata.txt", 'w') do |file|
   file.write(data)
 end
