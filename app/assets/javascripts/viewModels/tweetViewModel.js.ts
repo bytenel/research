@@ -38,7 +38,7 @@ module twitterResearch {
 				var self = this;
 				self.tweetsArray = ko.observableArray([]);
 				self.page = ko.observable(0);
-				self.per_page = 5;
+				self.per_page = 10;
 				self.total_pages = ko.computed(function(){
 					 var div = Math.floor(self.tweetsArray().length / self.per_page);
 			         div += self.tweetsArray().length % self.per_page > 0 ? 1 : 0;
