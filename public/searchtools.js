@@ -5,8 +5,8 @@ function initialize() {
 
     //Initialize the actual map
     map = new google.maps.Map(document.getElementById('map-canvas'), {
-    center: sanFrancisco,
-    zoom: 4,
+    center: new google.maps.LatLng(30, 0),
+    zoom: 2,
     mapTypeId: google.maps.MapTypeId.SATELLITE
     });
 
@@ -58,17 +58,24 @@ else {
     }
 }
 
-function getTweets(container, searchQuery, startingPoint, resultLimit) {
+// TODO: These tweet receiving operations should be put together into a static object/module.
+
+function getTweets(statusSpan, container, searchQuery, startingPoint, resultLimit) {
+    $(container).css('background', "url('ajax-loader.gif') no-repeat center"); //Show loading icon
+    var startTime = +new Date();
     $.get("/tweets", { search: searchQuery, starting_point: startingPoint, result_limit: resultLimit })
         .done(function(data) {
-            displayTweets(container, data);
+            var endTime = +new Date();
+            $(container).css('background', ""); //Show loading icon
+            displayTweets((endTime - startTime), statusSpan, container, data);
         });
 }
 
-function displayTweets(container, data) {
+function displayTweets(resultTime, statusSpan, container, data) {
     dataobject = JSON.parse(data);
     // TODO: Check to make sure response is formed well and successful.
     $(container).html(""); //Clear the box of any old search results.
+    $(statusSpan).html(dataobject['total_results'] + ' tweets found in ' + resultTime + 'ms.');
     for (index in dataobject['results']) {
         $(container).html($(container).html() +
         '<div class="result-item">' +
@@ -82,7 +89,7 @@ function displayTweets(container, data) {
 
 }
 
-function getNextPage(container, resultLimit) {
-    getTweets(container, $('#last-search').val(), $('#starting-point').val(), resultLimit);
+function getNextPage(statusSpan, container, resultLimit) {
+    getTweets(statusSpan, container, $('#last-search').val(), $('#starting-point').val(), resultLimit);
 }
 google.maps.event.addDomListener(window, 'load', initialize);

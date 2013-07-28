@@ -4,7 +4,7 @@
   <style type="text/css">
       html { height: 100% }
       body { height: 100%; margin: 0; padding: 0; font-family: }
-      input { padding: 8px; margin: 5px 10px; font-size: 14px; }
+      input { padding: 7px 10px; margin: 5px 15px 5px 0px; font-size: 14px; }
       label { font-size: 18px; }
       h3 { color: #3a87ad; font-size: 22px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; }
       #map-canvas { height: 100% }
@@ -16,6 +16,7 @@
       .tweet-time { font-size: 11px; font-weight: bold; }
       .tweet-text { }
       .tweet-user { margin: 0px; }
+      .loader-image { margin: 35px auto;}
   </style>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
   <script type="text/javascript"
@@ -31,7 +32,7 @@
 </div>
 <div id="search-container">
     <h3>Welcome! Please perform a search.</h3>
-    <form action="#" onsubmit="getTweets(document.getElementById('results-container'), document.getElementById('search-box').value, 0, document.getElementById('results-per-page').options[document.getElementById('results-per-page').selectedIndex].value); return false;">
+    <form action="#" onsubmit="getTweets(document.getElementById('status-text'), document.getElementById('results-container'), document.getElementById('search-box').value, 0, document.getElementById('results-per-page').options[document.getElementById('results-per-page').selectedIndex].value); return false;">
     <input type="text" id="search-box" onkeyup="searchMap(this, document.getElementById('search-button'), null);"/><input type="submit" id="search-button" value="Search" /><input type="checkbox" onclick="toggleHeatmap();" id="heatmap-toggle"/><label for="heatmap-toggle">View Heatmap</label><br />
       Results per page:
       <select id="results-per-page">
@@ -40,12 +41,13 @@
       <option value=25>25</option>
       <option value=50>50</option>
     </select>
+      <span id="status-text"></span>
 
     </form>
     <div id="results-container"></div>
       <input type="button" class="prev-next" value="Previous" onclick="" />
 
-      <input type="button" class="prev-next" value="Next" onclick="getNextPage(document.getElementById('results-container'), document.getElementById('results-per-page').options[document.getElementById('results-per-page').selectedIndex].value);" />
+      <input type="button" class="prev-next" value="Next" onclick="getNextPage(document.getElementById('status-text'), document.getElementById('results-container'), document.getElementById('results-per-page').options[document.getElementById('results-per-page').selectedIndex].value);" />
 </div>
 </body>
 </html>
