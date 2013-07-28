@@ -13,6 +13,9 @@ UndergradResearch::Application.routes.draw do
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 
+  resources :tweets
+  resources :search
+
   # Sample resource route with options:
   #   resources :products do
   #     member do
@@ -49,7 +52,7 @@ UndergradResearch::Application.routes.draw do
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
    match 'twitter' => 'twitter#index', :as => :display_tweets
-   match 'search' => 'twitter#search', :as => :search
+  # match 'search' => 'twitter#search', :as => :search
     
    root :to => 'twitter#index'
 

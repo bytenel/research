@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0; font-family: }
+      input { padding: 8px; margin: 5px 10px; font-size: 14px; }
+      label { font-size: 18px; }
+      h3 { color: #3a87ad; font-size: 22px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; }
+      #map-canvas { height: 100% }
+      #control-panel { height: 40px; padding: 30px 25px 45px 25px; background: url('fade.png') repeat-x #000; color:#fff; font-size: 14px;  }
+      #map-container { height: 100%; width: 65%; float: right; }
+      #search-container { height: 100%; max-width: 30%; padding: 30px; }
+      .result-item { height: 90px; padding-left: 100px; background: url('twitter-icon.png') no-repeat; }
+      .tweet-time { font-size: 11px; font-weight: bold; }
+      .tweet-text { }
+          .tweet-user { margin: 10px 0px 5px 0px; }
+  </style>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
+  <script type="text/javascript"
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAU0mPug-Q9GT3rqeg7gRN0dKkjNJCyieM&sensor=true&libraries=visualization">
+  </script>
+  <script src="searchtools.js" ></script>
+
+</head>
+
+<body>
+<div id="map-container">
+  <div id="control-panel">
+    <input type="checkbox" onclick="toggleHeatmap();" id="heatmap-toggle"/><label for="heatmap-toggle">View Heatmap</label><br />
+    <span id="map-status"></span>
+  </div>
+  <div id="map-canvas"> </div>
+</div>
+<div id="search-container">
+    <h3>Welcome! Please perform a search!</h3>
+    <input type="text" name="query" id="search-box" onkeyup="searchMap(this, document.getElementById('map-status'), null);"/><input type="button" value="Search" onclick="getTweets(document.getElementById('results-container'), document.getElementById('search-box').value);" />
+    <div id="results-container"></div>
+</div>
+</body>
+</html>

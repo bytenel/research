@@ -1,0 +1,8 @@
+<%
+   require 'json'
+   search_query = params[:search] ? params[:search] : ""
+   results = @tweets.where(text: /#{Regexp.escape(search_query)}/i)
+   result_count = results.length
+   response_object = {query: search_query, result_count: result_count, results: results}
+%>
+<%= response_object.to_json.html_safe %>
