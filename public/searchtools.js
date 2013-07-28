@@ -14,37 +14,34 @@ function initialize() {
     viewMap('1Lxp4IOOyIpiyCD3LCwc4iS3HHeyQHMFZKGxEI7w', 'Location');
 }
 
+//This method is optimized to reduce API queries - be mindful when editing.
 function viewMap(ID, columnName, query) {
+    sql = query ? query : "";
+
     if (typeof standard != 'undefined' && standard)
-    standard.setMap(null);
+        standard.setMap(null);
+
     if (typeof heatmap != 'undefined' && heatmap)
-    heatmap.setMap(null);
-    if (query)
-    sql = query;
+        heatmap.setMap(null);
+
+    standard = new google.maps.FusionTablesLayer({ query: { select: columnName, from: ID, where: sql}});
+    heatmap = new google.maps.FusionTablesLayer({ query: { select: columnName, from: ID, where: sql}, heatmap: { enabled: true }});
+
+    //Use the appropriate map.
+    if (document.getElementById('heatmap-toggle').checked == false)
+        standard.setMap(map); //Show the dotted map by default.
     else
-    sql = "";
-    if (document.getElementById('heatmap-toggle').checked == false)  {
-    standard = new google.maps.FusionTablesLayer({
-    query: { select: columnName, from: ID, where: sql}
-});
-standard.setMap(map); //Show the dotted map by default.
-}
-else {
-    heatmap = new google.maps.FusionTablesLayer({
-        query: { select: columnName, from: ID, where: sql},
-heatmap: { enabled: true }
-});
-heatmap.setMap(map); //Show the heatmap by default.
-}
+        heatmap.setMap(map); //Show the heatmap by default.
+
 }
 
 function toggleHeatmap() {
     if (standard.getMap() == null) {
-    heatmap.setMap(null);
-    standard.setMap(map);
+        heatmap.setMap(null);
+        standard.setMap(map);
     } else {
-    standard.setMap(null);
-    heatmap.setMap(map);
+        standard.setMap(null);
+        heatmap.setMap(map);
     }
 }
 
@@ -53,7 +50,7 @@ function searchMap(searchFieldObject, statusTextObject, query) {
     var tempUIquery = UIquery;
     if (query != UIquery) {
     statusTextObject.innerHTML = 'Searching...';
-    setTimeout(function(){searchMap(searchFieldObject, statusTextObject, tempUIquery);},200);
+    setTimeout(function(){searchMap(searchFieldObject, statusTextObject, tempUIquery);},150);
 }
 else {
     viewMap('1Lxp4IOOyIpiyCD3LCwc4iS3HHeyQHMFZKGxEI7w','Location', "Text CONTAINS '" + query + "'");
@@ -71,6 +68,7 @@ function getTweets(container, searchQuery) {
 function displayTweets(container, data) {
     dataobject = JSON.parse(data);
     // TODO: Check to make sure response is formed well and successful.
+    $(container).html(""); //Clear the box of any old search results.
     for (index in dataobject['results']) {
         $(container).html($(container).html() +
         '<div class="result-item">' +

@@ -10,11 +10,12 @@
       #map-canvas { height: 100% }
       #control-panel { height: 40px; padding: 30px 25px 45px 25px; background: url('fade.png') repeat-x #000; color:#fff; font-size: 14px;  }
       #map-container { height: 100%; width: 65%; float: right; }
-      #search-container { height: 100%; max-width: 30%; padding: 30px; }
-      .result-item { height: 90px; padding-left: 100px; background: url('twitter-icon.png') no-repeat; }
+      #search-container { height: 90%; max-width: 30%; padding: 30px; }
+      #results-container { height: 90%; overflow:auto; padding-right: 15px; }
+      .result-item { min-height: 90px; background: url('twitter-icon.png') no-repeat; border-bottom: 1px solid #ddd; padding: 10px 0px 10px 100px; }
       .tweet-time { font-size: 11px; font-weight: bold; }
       .tweet-text { }
-          .tweet-user { margin: 10px 0px 5px 0px; }
+      .tweet-user { margin: 0px; }
   </style>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
   <script type="text/javascript"
@@ -26,15 +27,14 @@
 
 <body>
 <div id="map-container">
-  <div id="control-panel">
-    <input type="checkbox" onclick="toggleHeatmap();" id="heatmap-toggle"/><label for="heatmap-toggle">View Heatmap</label><br />
-    <span id="map-status"></span>
-  </div>
-  <div id="map-canvas"> </div>
+  <div id="map-canvas"></div>
 </div>
 <div id="search-container">
-    <h3>Welcome! Please perform a search!</h3>
-    <input type="text" name="query" id="search-box" onkeyup="searchMap(this, document.getElementById('map-status'), null);"/><input type="button" value="Search" onclick="getTweets(document.getElementById('results-container'), document.getElementById('search-box').value);" />
+    <h3>Welcome! Please perform a search.</h3>
+    <form action="#" onsubmit="return false;">
+    <input type="text" name="query" id="search-box" onkeyup="searchMap(this, document.getElementById('map-status'), null);"/><input type="submit" value="Search" onclick="getTweets(document.getElementById('results-container'), document.getElementById('search-box').value);" /><input type="checkbox" onclick="toggleHeatmap();" id="heatmap-toggle"/><label for="heatmap-toggle">View Heatmap</label><br />
+    <span id="map-status"></span>
+    </form>
     <div id="results-container"></div>
 </div>
 </body>
