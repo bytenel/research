@@ -49,17 +49,17 @@ function searchMap(searchFieldObject, statusTextObject, query) {
     UIquery = searchFieldObject.value;
     var tempUIquery = UIquery;
     if (query != UIquery) {
-    statusTextObject.innerHTML = 'Searching...';
+    statusTextObject.value = 'Searching...';
     setTimeout(function(){searchMap(searchFieldObject, statusTextObject, tempUIquery);},150);
 }
 else {
     viewMap('1Lxp4IOOyIpiyCD3LCwc4iS3HHeyQHMFZKGxEI7w','Location', "Text CONTAINS '" + query + "'");
-    statusTextObject.innerHTML = '';
+    statusTextObject.value = 'Search';
     }
 }
 
-function getTweets(container, searchQuery) {
-    $.get("/tweets", { search: searchQuery })
+function getTweets(container, searchQuery, startingPoint, resultLimit) {
+    $.get("/tweets", { search: searchQuery, starting_point: startingPoint, result_limit: resultLimit })
         .done(function(data) {
             displayTweets(container, data);
         });
@@ -77,7 +77,12 @@ function displayTweets(container, data) {
         '<span class="tweet-text">' + dataobject['results'][index]['text'] + '</span>' +
         '</div>');
     }
+    $(container).html($(container).html() +'<input type="hidden" id="last-search" value="' + dataobject['query'] + '" />');
+    $(container).html($(container).html() +'<input type="hidden" id="starting-point" value="' + dataobject['last_record_number'] + '" />');
 
 }
 
+function getNextPage(container, resultLimit) {
+    getTweets(container, $('#last-search').val(), $('#starting-point').val(), resultLimit);
+}
 google.maps.event.addDomListener(window, 'load', initialize);

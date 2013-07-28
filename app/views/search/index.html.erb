@@ -11,7 +11,7 @@
       #control-panel { height: 40px; padding: 30px 25px 45px 25px; background: url('fade.png') repeat-x #000; color:#fff; font-size: 14px;  }
       #map-container { height: 100%; width: 65%; float: right; }
       #search-container { height: 90%; max-width: 30%; padding: 30px; }
-      #results-container { height: 90%; overflow:auto; padding-right: 15px; }
+      #results-container { height: 85%; overflow:auto; padding-right: 15px; }
       .result-item { min-height: 90px; background: url('twitter-icon.png') no-repeat; border-bottom: 1px solid #ddd; padding: 10px 0px 10px 100px; }
       .tweet-time { font-size: 11px; font-weight: bold; }
       .tweet-text { }
@@ -31,11 +31,21 @@
 </div>
 <div id="search-container">
     <h3>Welcome! Please perform a search.</h3>
-    <form action="#" onsubmit="return false;">
-    <input type="text" name="query" id="search-box" onkeyup="searchMap(this, document.getElementById('map-status'), null);"/><input type="submit" value="Search" onclick="getTweets(document.getElementById('results-container'), document.getElementById('search-box').value);" /><input type="checkbox" onclick="toggleHeatmap();" id="heatmap-toggle"/><label for="heatmap-toggle">View Heatmap</label><br />
-    <span id="map-status"></span>
+    <form action="#" onsubmit="getTweets(document.getElementById('results-container'), document.getElementById('search-box').value, 0, document.getElementById('results-per-page').options[document.getElementById('results-per-page').selectedIndex].value); return false;">
+    <input type="text" id="search-box" onkeyup="searchMap(this, document.getElementById('search-button'), null);"/><input type="submit" id="search-button" value="Search" /><input type="checkbox" onclick="toggleHeatmap();" id="heatmap-toggle"/><label for="heatmap-toggle">View Heatmap</label><br />
+      Results per page:
+      <select id="results-per-page">
+      <option value=5>5</option>
+      <option value=10 selected>10</option>
+      <option value=25>25</option>
+      <option value=50>50</option>
+    </select>
+
     </form>
     <div id="results-container"></div>
+      <input type="button" class="prev-next" value="Previous" onclick="" />
+
+      <input type="button" class="prev-next" value="Next" onclick="getNextPage(document.getElementById('results-container'), document.getElementById('results-per-page').options[document.getElementById('results-per-page').selectedIndex].value);" />
 </div>
 </body>
 </html>
