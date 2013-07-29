@@ -60,10 +60,10 @@ else {
 
 // TODO: These tweet receiving operations should be put together into a static object/module.
 
-function getTweets(statusSpan, container, searchQuery, startingPoint, resultLimit) {
+function getTweets(statusSpan, container, searchQuery, startingPoint, resultLimit, maxScan) {
     $(container).css('background', "url('ajax-loader.gif') no-repeat center"); //Show loading icon
     var startTime = +new Date();
-    $.get("/tweets", { search: searchQuery, starting_point: startingPoint, result_limit: resultLimit })
+    $.get("/tweets", { search: searchQuery, starting_point: startingPoint, result_limit: resultLimit, max_scan: maxScan })
         .done(function(data) {
             var endTime = +new Date();
             $(container).css('background', ""); //Show loading icon
@@ -89,7 +89,7 @@ function displayTweets(resultTime, statusSpan, container, data) {
 
 }
 
-function getNextPage(statusSpan, container, resultLimit) {
-    getTweets(statusSpan, container, $('#last-search').val(), $('#starting-point').val(), resultLimit);
+function getNextPage(statusSpan, container, resultLimit, maxScan) {
+    getTweets(statusSpan, container, $('#last-search').val(), $('#starting-point').val(), resultLimit, maxScan);
 }
 google.maps.event.addDomListener(window, 'load', initialize);

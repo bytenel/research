@@ -3,9 +3,10 @@
    search_query = params[:search] ? params[:search] : ""
    result_limit = params[:result_limit] ? params[:result_limit] : 10
    starting_point = params[:starting_point] ? params[:starting_point] : 0
-   results = @tweets.only(:created_at, :text, :user).where(text: /#{Regexp.escape(search_query)}/i, ).skip(starting_point).limit(result_limit)
-   total_results = results.length
-   result_count = results.count(true)
+   max_scan = params[:max_scan] ? params[:max_scan].to_i : nil
+   results = @tweets.only(:created_at, :text, 'user.screen_name').max_scan(max_scan).where(text: /#{Regexp.escape(search_query)}/i).skip(starting_point).limit(result_limit)
+   total_results = '?'#preresult.length
+   result_count = results.to_a.length #results.count(true)
    last_record_number = starting_point.to_i + result_count
    response_object = {query: search_query, result_count: result_count, last_record_number: last_record_number, total_results: total_results, results: results}
 %>

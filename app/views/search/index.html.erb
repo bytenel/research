@@ -32,22 +32,33 @@
 </div>
 <div id="search-container">
     <h3>Welcome! Please perform a search.</h3>
-    <form action="#" onsubmit="getTweets(document.getElementById('status-text'), document.getElementById('results-container'), document.getElementById('search-box').value, 0, document.getElementById('results-per-page').options[document.getElementById('results-per-page').selectedIndex].value); return false;">
+    <form action="#" onsubmit="getTweets(document.getElementById('status-text'), document.getElementById('results-container'), document.getElementById('search-box').value, 0, document.getElementById('results-per-page').options[document.getElementById('results-per-page').selectedIndex].value, document.getElementById('max-scan').options[document.getElementById('max-scan').selectedIndex].value); return false;">
     <input type="text" id="search-box" onkeyup="searchMap(this, document.getElementById('search-button'), null);"/><input type="submit" id="search-button" value="Search" /><input type="checkbox" onclick="toggleHeatmap();" id="heatmap-toggle"/><label for="heatmap-toggle">View Heatmap</label><br />
       Results per page:
       <select id="results-per-page">
-      <option value=5>5</option>
-      <option value=10 selected>10</option>
-      <option value=25>25</option>
-      <option value=50>50</option>
-    </select>
+        <option value=5>5</option>
+        <option value=10 selected>10</option>
+        <option value=25>25</option>
+        <option value=50>50</option>
+      </select>
+      Records to search:
+      <select id="max-scan">
+        <option value=0 selected>All</option>
+        <option value=10>10</option>
+        <option value=100>100</option>
+        <option value=1000>1000</option>
+        <option value=10000>10000</option>
+        <option value=100000>100000</option>
+        <option value=1000000>1000000</option>
+        <option value=10000000>10000000</option>
+      </select>
       <span id="status-text"></span>
 
     </form>
     <div id="results-container"></div>
       <input type="button" class="prev-next" value="Previous" onclick="" />
 
-      <input type="button" class="prev-next" value="Next" onclick="getNextPage(document.getElementById('status-text'), document.getElementById('results-container'), document.getElementById('results-per-page').options[document.getElementById('results-per-page').selectedIndex].value);" />
+      <input type="button" class="prev-next" value="Next" onclick="getNextPage(document.getElementById('status-text'), document.getElementById('results-container'), document.getElementById('results-per-page').options[document.getElementById('results-per-page').selectedIndex].value, document.getElementById('max-scan').options[document.getElementById('max-scan').selectedIndex].value);" />
 </div>
 </body>
 </html>
