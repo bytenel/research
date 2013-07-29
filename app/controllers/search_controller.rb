@@ -1,4 +1,4 @@
-class SearchController < ApplicationController
+class SearchController < ActionController::Base
   def index
 
   end

@@ -54,9 +54,8 @@ UndergradResearch::Application.routes.draw do
    match 'twitter' => 'twitter#index', :as => :display_tweets
   # match 'search' => 'twitter#search', :as => :search
     
-   root :to => 'twitter#index'
+   root :to => 'search#index'
 
-   get '/map', to: 'twitter#map'
 
   # See how all your routes lay out with "rake routes"
 
