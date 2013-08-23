@@ -22,8 +22,8 @@ Tasks:
 # Returns an array of tweets
 def load_tweet_collection(database, collection, num_rows, skip_num)
   @client = MongoClient.new('localhost', 27017)
-  @db     = @client['undergrad_research']
-  @coll   = @db['tweets']
+  @db     = @client[database]
+  @coll   = @db[collection]
   puts "Preparing to retrieve the last " + num_rows.to_s + " rows from database after skipping the very last " + skip_num.to_s + " rows.\n\n"
   items = @coll.find({text: { '$exists' => true }, coordinates: { '$exists' => true }, created_at: { '$exists' => true } }, {:fields => ["text", "coordinates", "created_at"], :sort => ["_id", Mongo::DESCENDING], :skip => skip_num})
   return items
